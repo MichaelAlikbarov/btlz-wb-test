@@ -1,6 +1,7 @@
 import env from "#config/env/env.js";
 import { Knex } from "knex";
 import { z } from "zod";
+import path from "path";
 
 const connectionSchema = z.object({
     host: z.string(),
@@ -28,14 +29,18 @@ const knegConfigs: Record<typeof NODE_ENV, Knex.Config> = {
             max: 10,
         },
         migrations: {
-            stub: 'src/config/knex/migration.stub.js',
-            directory: "./src/postgres/migrations",
-            tableName: "migrations",
+            // stub: 'src/config/knex/migration.stub.js',
+            // directory: "./src/postgres/migrations",
+            stub: path.resolve("src/config/knex/migration.stub.js"),
+            directory: path.resolve("src/postgres/migrations"),
+            tableName: "knex_migrations",
             extension: "ts",
         },
         seeds: {
-            stub: 'src/config/knex/seed.stub.js',
-            directory: "./src/postgres/seeds",
+            // stub: 'src/config/knex/seed.stub.js',
+            // directory: "./src/postgres/seeds",
+            stub: path.resolve("src/config/knex/seed.stub.js"),
+            directory: path.resolve("src/postgres/seeds"),
             extension: "js",
         },
     },
