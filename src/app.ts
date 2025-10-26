@@ -25,7 +25,6 @@ async function main() {
         console.log("Планировщик запущен (обновление каждый час)");
 
         async function testUpdate() {
-            // const data = await getTariffsFromDb();
             await updateGoogleSheet();
         }
 

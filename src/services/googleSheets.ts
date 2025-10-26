@@ -1,5 +1,6 @@
 import knex from "#postgres/knex.js";
 import { google } from "googleapis";
+import config from "#config/env/env.js";
 
 export async function getTariffsFromDB() {
     return await knex("tariffs").select("*").orderBy("box_delivery_coef_expr", "asc");
@@ -7,11 +8,11 @@ export async function getTariffsFromDB() {
 
 async function updateSheet(tariffs: any[]) {
     const auth = new google.auth.GoogleAuth({
-        keyFile: process.env.GOOGLE_SERVICE_ACCOUNT_FILE,
+        keyFile: config.GOOGLE_SERVICE_ACCOUNT_FILE,
         scopes: ["https://www.googleapis.com/auth/spreadsheets"]
     });
 
-    const sheetId = process.env.SPREADSHEET_ID;
+    const sheetId = config.SPREADSHEET_ID;
 
     const sheets = google.sheets({ version: "v4", auth });
         await sheets.spreadsheets.values.clear({
