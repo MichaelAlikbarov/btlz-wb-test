@@ -4,6 +4,21 @@ import knex from "#postgres/knex.js";
 
 const date = new Date().toISOString().slice(0,10);
 
+function dataAndTime() {
+    const now = new Date();
+
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '1');
+    const year = now.getFullYear();
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
+    return formattedDate;
+}
+
 export async function fetchTariffs() {
     const response = await axios.get(config.WB_API_URL, {
         headers: {
@@ -41,7 +56,7 @@ export async function fetchTariffs() {
         box_delivery_marketplace_coef_expr: parseValue(item.boxDeliveryMarketplaceCoefExpr),
         box_delivery_marketplace_liter: parseValue(item.boxDeliveryMarketplaceLiter),
 
-        created_at: new Date(),
+        created_at: dataAndTime(),
     }));
     await knex("tariffs").del();
     await knex("tariffs").insert(tariffs);

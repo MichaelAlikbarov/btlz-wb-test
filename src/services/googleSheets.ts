@@ -1,12 +1,13 @@
 import knex from "#postgres/knex.js";
 import { google } from "googleapis";
 import config from "#config/env/env.js";
+import { ITariff } from "#utils/type.js";
 
 export async function getTariffsFromDB() {
     return await knex("tariffs").select("*").orderBy("box_delivery_coef_expr", "asc");
 }
 
-async function updateSheet(tariffs: any[]) {
+async function updateSheet(tariffs: ITariff[]) {
     const auth = new google.auth.GoogleAuth({
         keyFile: config.GOOGLE_SERVICE_ACCOUNT_FILE,
         scopes: ["https://www.googleapis.com/auth/spreadsheets"]
@@ -21,6 +22,8 @@ async function updateSheet(tariffs: any[]) {
     });
 
     const values = tariffs.map(t => [
+        t.id,
+        t.created_at,
         t.geo_name,
         t.box_delivery_base,
         t.box_delivery_coef_expr,
@@ -45,5 +48,6 @@ async function updateSheet(tariffs: any[]) {
 
 export async function updateGoogleSheet() {
     const tariffs = await getTariffsFromDB();
+    console.log(tariffs);
     await updateSheet(tariffs);
 }
